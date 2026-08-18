@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { openBrowser } = require('./open-browser');
 const { acquireLock, writeLock, releaseLock } = require('./lock');
+const { version, author } = require('../package.json');
 
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 
@@ -99,6 +100,7 @@ function startServer({ port = 3000, host = '127.0.0.1', open = true } = {}) {
       });
 
       console.log('');
+      console.log(`  gpt-image-maker v${version} by ${author}`);
       console.log('  AI Image Generator is running!');
       console.log(`  -> ${url}`);
       console.log('  Press Ctrl+C to stop.');

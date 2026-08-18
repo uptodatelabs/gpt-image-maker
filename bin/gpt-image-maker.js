@@ -2,6 +2,7 @@
 'use strict';
 
 const { startServer } = require('../src/server');
+const { version, author } = require('../package.json');
 
 function parseArgs(argv) {
   const opts = { port: 3000, host: '127.0.0.1', open: true };
@@ -36,7 +37,8 @@ function parseArgs(argv) {
 
 function printHelp() {
   console.log(`
-  gpt-image-maker - AI Image Generator (Puter.js powered)
+  gpt-image-maker v${version} by ${author}
+  AI Image Generator (Puter.js powered)
 
   Usage:
     gpt-image-maker [options]
