@@ -40,6 +40,24 @@
             font-size: 0.9rem;
         }
 
+        .credits-badge {
+            display: inline-block;
+            margin-top: 14px;
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            color: #667eea;
+            border-radius: 999px;
+            padding: 6px 18px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .credits-badge:hover {
+            border-color: #667eea;
+            color: #8b9cf7;
+        }
+
         .main-grid {
             display: grid;
             grid-template-columns: 400px 1fr;
@@ -400,6 +418,7 @@
         <header>
             <h1>AI Image Generator</h1>
             <p>Puter.js + OpenAI GPT Image | Powered by User-Pays Model</p>
+            <div class="credits-badge" id="creditsBadge" title="Remaining / monthly allowance (USD) - click to refresh">Credits: ...</div>
         </header>
 
         <div class="error-msg" id="errorMsg"></div>
@@ -512,6 +531,30 @@
         const resultActions = document.getElementById('resultActions');
         const errorMsg = document.getElementById('errorMsg');
         const testToggle = document.getElementById('testToggle');
+        const creditsBadge = document.getElementById('creditsBadge');
+
+        // --- Credits Display ---
+        const MICROCENTS_PER_USD = 100000000;
+
+        async function refreshCredits() {
+            if (typeof puter === 'undefined' || !puter.auth) return;
+            creditsBadge.textContent = 'Credits: ...';
+            try {
+                const usage = await puter.auth.getMonthlyUsage();
+                if (usage && usage.allowanceInfo) {
+                    const { monthUsageAllowance, remaining } = usage.allowanceInfo;
+                    const fmt = (v) => (v / MICROCENTS_PER_USD).toFixed(2);
+                    creditsBadge.textContent = `Credits: $${fmt(remaining)} / $${fmt(monthUsageAllowance)}`;
+                } else {
+                    creditsBadge.textContent = 'Credits: unavailable';
+                }
+            } catch {
+                creditsBadge.textContent = 'Credits: unavailable';
+            }
+        }
+
+        creditsBadge.addEventListener('click', refreshCredits);
+        window.addEventListener('load', () => setTimeout(refreshCredits, 500));
 
         // --- Reference Image Upload ---
         refUpload.addEventListener('click', () => refFileInput.click());
@@ -639,6 +682,7 @@
                 outputPlaceholder.style.display = 'block';
             } finally {
                 generateBtn.disabled = false;
+                refreshCredits();
             }
         });
 
