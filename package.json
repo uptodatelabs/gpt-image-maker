@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/uptodatelabs/gpt-image-maker.git"
+    "url": "git+https://github.com/uptodatelabs/gpt-image-maker.git"
   },
   "bugs": {
     "url": "https://github.com/uptodatelabs/gpt-image-maker/issues"
