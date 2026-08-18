@@ -4,6 +4,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const { openBrowser } = require('./open-browser');
+const { acquireLock, writeLock, releaseLock } = require('./lock');
 
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
 
@@ -72,10 +73,31 @@ function startServer({ port = 3000, host = '127.0.0.1', open = true } = {}) {
   const server = http.createServer(serveFile);
 
   return new Promise((resolve, reject) => {
+    const lock = acquireLock();
+    if (!lock.ok) {
+      resolve({
+        alreadyRunning: true,
+        url: lock.url || `http://${host}:${port}/`,
+      });
+      return;
+    }
+
     server.on('error', reject);
 
     server.listen(port, host, () => {
       const url = `http://${host}:${port}/`;
+      writeLock(port, url);
+
+      process.on('exit', releaseLock);
+      process.on('SIGINT', () => {
+        releaseLock();
+        process.exit(0);
+      });
+      process.on('SIGTERM', () => {
+        releaseLock();
+        process.exit(0);
+      });
+
       console.log('');
       console.log('  AI Image Generator is running!');
       console.log(`  -> ${url}`);

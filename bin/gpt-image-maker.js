@@ -52,7 +52,13 @@ function printHelp() {
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
   try {
-    await startServer(opts);
+    const result = await startServer(opts);
+    if (result && result.alreadyRunning) {
+      console.log('Another gpt-image-maker instance is already running.');
+      console.log(`  -> ${result.url}`);
+      console.log('Open the URL above, or stop the other instance first.');
+      process.exit(0);
+    }
   } catch (err) {
     if (err.code === 'EADDRINUSE') {
       console.error(`Port ${opts.port} is already in use. Try: gpt-image-maker --port 3001`);

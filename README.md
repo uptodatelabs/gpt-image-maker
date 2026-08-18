@@ -50,7 +50,9 @@ npx gpt-image-maker --port 8080 --no-open
 - Quality and aspect-ratio presets
 - Test mode (no credits consumed)
 - Download / save to Puter / reuse result as reference
+- Remaining credit display in the header (signs in first if needed, auto-refreshes after each generation)
 - Local history (session only)
+- Single-instance guard: starting a second instance is blocked and points you to the running one
 
 ## For developers
 
