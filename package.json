@@ -1,0 +1,38 @@
+{
+  "name": "gpt-image-maker",
+  "version": "1.0.0",
+  "description": "AI image generator web app powered by Puter.js. Run locally with a single command - zero dependencies.",
+  "license": "MIT",
+  "author": "uptodatelabs",
+  "main": "src/server.js",
+  "bin": {
+    "gpt-image-maker": "bin/gpt-image-maker.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "public"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node bin/gpt-image-maker.js"
+  },
+  "keywords": [
+    "ai",
+    "image-generator",
+    "gpt-image",
+    "puter",
+    "static-server",
+    "zero-dependency"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uptodatelabs/gpt-image-maker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/uptodatelabs/gpt-image-maker/issues"
+  },
+  "homepage": "https://github.com/uptodatelabs/gpt-image-maker#readme"
+}
