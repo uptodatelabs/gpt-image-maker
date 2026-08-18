@@ -553,8 +553,33 @@
             }
         }
 
-        creditsBadge.addEventListener('click', refreshCredits);
-        window.addEventListener('load', () => setTimeout(refreshCredits, 500));
+        async function handleCreditsClick() {
+            if (typeof puter === 'undefined' || !puter.auth) return;
+            try {
+                if (!(await puter.auth.isSignedIn())) {
+                    creditsBadge.textContent = 'Signing in...';
+                    await puter.auth.signIn();
+                }
+                refreshCredits();
+            } catch {
+                creditsBadge.textContent = 'Credits: sign in failed';
+            }
+        }
+
+        creditsBadge.addEventListener('click', handleCreditsClick);
+
+        window.addEventListener('load', () => setTimeout(async () => {
+            if (typeof puter === 'undefined' || !puter.auth) return;
+            try {
+                if (await puter.auth.isSignedIn()) {
+                    refreshCredits();
+                } else {
+                    creditsBadge.textContent = 'Credits: click to sign in';
+                }
+            } catch {
+                creditsBadge.textContent = 'Credits: click to sign in';
+            }
+        }, 500));
 
         // --- Reference Image Upload ---
         refUpload.addEventListener('click', () => refFileInput.click());
