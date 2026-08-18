@@ -536,15 +536,31 @@
         // --- Credits Display ---
         const MICROCENTS_PER_USD = 100000000;
 
+        function fmtCredits(v) {
+            return Number.isInteger(v) ? v.toLocaleString() : v.toFixed(2);
+        }
+
+        function fmtDollars(v) {
+            return '$' + (v / MICROCENTS_PER_USD).toFixed(2);
+        }
+
         async function refreshCredits() {
             if (typeof puter === 'undefined' || !puter.auth) return;
             creditsBadge.textContent = 'Credits: ...';
             try {
                 const usage = await puter.auth.getMonthlyUsage();
-                if (usage && usage.allowanceInfo) {
-                    const { monthUsageAllowance, remaining } = usage.allowanceInfo;
-                    const fmt = (v) => (v / MICROCENTS_PER_USD).toFixed(2);
-                    creditsBadge.textContent = `Credits: $${fmt(remaining)} / $${fmt(monthUsageAllowance)}`;
+                const info = usage && usage.allowanceInfo;
+                if (info && info.remaining !== undefined) {
+                    const { remaining, monthUsageAllowance, unit } = info;
+                    if (unit === 'credits') {
+                        creditsBadge.textContent =
+                            `Credits: ${fmtCredits(remaining)} / ${fmtCredits(monthUsageAllowance)}`;
+                        creditsBadge.title = 'Remaining / monthly allowance (credits) - click to refresh';
+                    } else {
+                        creditsBadge.textContent =
+                            `Credits: ${fmtDollars(remaining)} / ${fmtDollars(monthUsageAllowance)}`;
+                        creditsBadge.title = 'Remaining / monthly allowance (USD) - click to refresh';
+                    }
                 } else {
                     creditsBadge.textContent = 'Credits: unavailable';
                 }
